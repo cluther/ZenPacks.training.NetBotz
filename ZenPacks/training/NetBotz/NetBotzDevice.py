@@ -19,8 +19,8 @@ class NetBotzDevice(Device):
         )
 
     _relations = Device._relations + (
-        ('temperature_sensors', ToManyCont(ToOne,
-            'ZenPacks.training.NetBotz.TemperatureSensor',
+        ('enclosures', ToManyCont(ToOne,
+            'ZenPacks.training.NetBotz.Enclosure',
             'sensor_device',
             )),
         )

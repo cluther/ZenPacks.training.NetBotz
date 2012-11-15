@@ -4,6 +4,7 @@ from Products.ZenModel.DeviceComponent import DeviceComponent
 from Products.ZenModel.ManagedEntity import ManagedEntity
 from Products.ZenModel.ZenossSecurity import ZEN_CHANGE_DEVICE
 from Products.ZenRelations.RelSchema import ToManyCont, ToOne
+from Products.Zuul.decorators import info
 from Products.Zuul.form import schema
 from Products.Zuul.infos import ProxyProperty
 from Products.Zuul.infos.component import ComponentInfo
@@ -17,17 +18,15 @@ class TemperatureSensor(DeviceComponent, ManagedEntity):
     # Fields inherited from DeviceComponent and ManagedEntity
     #   id, title, snmpindex
 
-    enclosure = None
     port = None
 
     _properties = ManagedEntity._properties + (
-        {'id': 'enclosure', 'type': 'string'},
         {'id': 'port', 'type': 'string'},
         )
 
     _relations = ManagedEntity._relations + (
-        ('sensor_device', ToOne(ToManyCont,
-            'ZenPacks.training.NetBotz.NetBotzDevice',
+        ('enclosure', ToOne(ToManyCont,
+            'ZenPacks.training.NetBotz.Enclosure',
             'temperature_sensors',
             )),
         )
@@ -42,20 +41,30 @@ class TemperatureSensor(DeviceComponent, ManagedEntity):
         },)
 
     def device(self):
-        return self.sensor_device()
+        return self.enclosure().device()
 
     def getRRDTemplateName(self):
         return 'TemperatureSensor'
 
 
 class ITemperatureSensorInfo(IComponentInfo):
-    enclosure = schema.TextLine(title=_t('Sensor Enclosure ID'))
+
+    # enclosure is schema.Entity because it will return an object. Not text.
+    enclosure = schema.Entity(title=_t('Sensor Enclosure ID'))
+
     port = schema.TextLine(title=_t('Sensor Port ID'))
 
 
 class TemperatureSensorInfo(ComponentInfo):
     implements(ITemperatureSensorInfo)
 
-    enclosure = ProxyProperty('enclosure')
     port = ProxyProperty('port')
+
+    @property
+    @info
+    def enclosure(self):
+        """Return the Enclosure object because ITemperatureInfo defines this
+        property as an Entity."""
+
+        return self._object.enclosure()
 

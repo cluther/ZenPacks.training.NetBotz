@@ -13,9 +13,19 @@
         factory=".TemperatureSensor.TemperatureSensorInfo"
         />
 
+    <adapter
+        provides=".Enclosure.IEnclosureInfo"
+        for=".Enclosure.Enclosure"
+        factory=".Enclosure.EnclosureInfo"
+        />
+
+    <!--
+    Utilities are a lot like adapters. The difference is that they have no
+    input or source object. They simply implement an interface.
+    -->
     <utility
-        factory=".actions.SpeakAction"
         provides="Products.ZenModel.interfaces.IAction"
+        factory=".actions.SpeakAction"
         name="speak"
         />
 
