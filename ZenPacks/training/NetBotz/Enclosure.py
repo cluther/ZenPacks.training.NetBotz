@@ -68,7 +68,7 @@ class IEnclosureInfo(IComponentInfo):
 class EnclosureInfo(ComponentInfo):
     implements(IEnclosureInfo)
 
-    enclosure_status = ProxyProperty('status')
+    enclosure_status = ProxyProperty('enclosure_status')
     error_status = ProxyProperty('error_status')
     parent_id = ProxyProperty('parent_id')
     docked_id = ProxyProperty('docked_id')
